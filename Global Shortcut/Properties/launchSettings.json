@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Global Shortcut (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Global Shortcut (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
