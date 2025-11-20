@@ -1,15 +1,14 @@
 using DevWinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Windows.Win32;
 using Windows.Win32.Foundation;
-using Windows.Win32.UI.Input.KeyboardAndMouse;
 using WinRT.Interop;
+using Windows.System;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace Global_Shortcut
+namespace GlobalShortcut
 {
     /// <summary>
     /// An empty window that can be used on its own or navigated to within a Frame.

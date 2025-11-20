@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Window
-    x:Class="Global_Shortcut.MainWindow"
+    x:Class="GlobalShortcut.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Global_Shortcut"
+    xmlns:local="using:GlobalShortcut"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dev="using:DevWinUI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
