@@ -21,7 +21,7 @@ namespace GlobalShortcut
         public MainWindow()
         {
             InitializeComponent();
-            MainShortcut.Keys = ["F6"];
+            MainShortcut.Keys = [new KeyVisualInfo { Key = VirtualKey.F6, KeyName = "F6" }];
 
             // Get window handle
             HWND hWnd = new(WindowNative.GetWindowHandle(this));
