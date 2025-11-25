@@ -1,6 +1,12 @@
 using DevWinUI;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Runtime.InteropServices;
+using Windows.System;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.UI.Input.KeyboardAndMouse;
@@ -23,14 +29,9 @@ namespace GlobalShortcut
             InitializeComponent();
             MainShortcut.Keys = [new KeyVisualInfo { Key = VirtualKey.F6, KeyName = "F6" }];
 
-            // Get window handle
-            HWND hWnd = new(WindowNative.GetWindowHandle(this));
-
             // Set up window message monitor
             WindowMessageMonitor monitor = new(this);
             monitor.WindowMessageReceived += OnWindowMessageReceived;
-
-            PInvoke.RegisterHotKey(hWnd, 0x0000, HOT_KEY_MODIFIERS.MOD_NOREPEAT, 0x75); // F6
         }
 
         private void OnWindowMessageReceived(object? sender, WindowMessageEventArgs e)
@@ -46,6 +47,40 @@ namespace GlobalShortcut
         {
             MainShortcut.UpdatePreviewKeys();
             MainShortcut.CloseContentDialog();
+
+            var keyInfos = MainShortcut.Keys.Cast<KeyVisualInfo>();
+
+            Debug.WriteLine("New hotkey saved: " + string.Join(" + ", MainShortcut.Keys));
+
+            VirtualKeyModifiers modifiers = VirtualKeyModifiers.None;
+            VirtualKey triggerKey = VirtualKey.None;
+
+            foreach (var item in keyInfos)
+            {
+                if (item.Key.HasValue)
+                {
+                    var modFlag = GetModifierFlag(item.Key.Value);
+
+                    if (modFlag != VirtualKeyModifiers.None)
+                    {
+                        modifiers |= modFlag;
+                    }
+                    else
+                    {
+                        triggerKey = item.Key.Value;
+                    }
+                }
+            }
+
+            if (triggerKey != VirtualKey.None)
+            {
+                // Get window handle
+                HWND hWnd = new(WindowNative.GetWindowHandle(this));
+
+                // Register the hotkey
+                _ = PInvoke.UnregisterHotKey(hWnd, 0x0000);
+                _ = PInvoke.RegisterHotKey(hWnd, 0x0000, HOT_KEY_MODIFIERS.MOD_NOREPEAT | (HOT_KEY_MODIFIERS)modifiers, (uint)triggerKey);
+            }
         }
 
         private void OnMainShortcutSecondaryButtonClick(object sender, ContentDialogButtonClickEventArgs e)
@@ -57,5 +92,14 @@ namespace GlobalShortcut
         {
             // "Close button clicked!";
         }
+
+        private static VirtualKeyModifiers GetModifierFlag(VirtualKey key) => key switch
+        {
+            VirtualKey.Control or VirtualKey.LeftControl or VirtualKey.RightControl => VirtualKeyModifiers.Control,
+            VirtualKey.Shift or VirtualKey.LeftShift or VirtualKey.RightShift => VirtualKeyModifiers.Shift,
+            VirtualKey.Menu or VirtualKey.LeftMenu or VirtualKey.RightMenu => VirtualKeyModifiers.Menu,
+            VirtualKey.LeftWindows or VirtualKey.RightWindows => VirtualKeyModifiers.Windows,
+            _ => VirtualKeyModifiers.None
+        };
     }
 }
