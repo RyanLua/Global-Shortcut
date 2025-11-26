@@ -59,7 +59,7 @@ namespace GlobalShortcut
             {
                 if (item.Key.HasValue)
                 {
-                    var modFlag = GetModifierFlag(item.Key.Value);
+                    var modFlag = GetModifierKey(item.Key.Value);
 
                     if (modFlag != VirtualKeyModifiers.None)
                     {
@@ -93,13 +93,13 @@ namespace GlobalShortcut
             // "Close button clicked!";
         }
 
-        private static VirtualKeyModifiers GetModifierFlag(VirtualKey key) => key switch
+        private static VirtualKeyModifiers GetModifierKey(VirtualKey key) => key switch
         {
             VirtualKey.Control or VirtualKey.LeftControl or VirtualKey.RightControl => VirtualKeyModifiers.Control,
-            VirtualKey.Shift or VirtualKey.LeftShift or VirtualKey.RightShift => VirtualKeyModifiers.Shift,
             VirtualKey.Menu or VirtualKey.LeftMenu or VirtualKey.RightMenu => VirtualKeyModifiers.Menu,
+            VirtualKey.Shift or VirtualKey.LeftShift or VirtualKey.RightShift => VirtualKeyModifiers.Shift,
             VirtualKey.LeftWindows or VirtualKey.RightWindows => VirtualKeyModifiers.Windows,
-            _ => VirtualKeyModifiers.None
+            _ => VirtualKeyModifiers.None,
         };
     }
 }
